@@ -11,7 +11,7 @@ const router = require('./router/route');
 dotenv.config();
 app.use(cors());
 app.use(bodyParser.json());
-
+app.use(express.json());
 connectDB();
 
 
