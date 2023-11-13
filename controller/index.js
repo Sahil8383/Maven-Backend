@@ -2,17 +2,20 @@ const User = require('../models/User');
 const Movie = require('../models/Movie');
 const jwt = require('jsonwebtoken');
 const bycrypt = require('bcrypt');
-const { UploadS3 } = require("../S3");
 const mongoose = require('mongoose');
 const Grid = require("gridfs-stream");
+const Series = require('../models/TestSeries');
 const dotenv = require('dotenv');
 dotenv.config();
 
 const conn = mongoose.createConnection(process.env.MONGO_URL);
-let gfs, gridfsbucket;
+let gfs, gridfsbucket, gfsSeries, gfsSeriesBucket;
 
 conn.once("open", () => {
 
+    gfsSeriesBucket = new mongoose.mongo.GridFSBucket(conn.db, {
+        bucketName: "test-series"
+    });
 
     gridfsbucket = new mongoose.mongo.GridFSBucket(conn.db, {
         bucketName: "test-movies"
@@ -20,6 +23,9 @@ conn.once("open", () => {
 
     gfs = Grid(conn.db, mongoose.mongo);
     gfs.collection("test-movies");
+    gfsSeries = Grid(conn.db, mongoose.mongo);
+    gfsSeries.collection("test-series");
+
 });
 
 const SignUp = async (req, res) => {
@@ -74,26 +80,26 @@ const LoginIn = async (req, res) => {
 
 
 const UploadMovies = async (req, res) => {
-    try {
+    // try {
 
-        const { title, bio, genre } = req.body;
-        const video = req.file;
+    //     const { title, bio, genre } = req.body;
+    //     const video = req.file;
 
-        const result = await UploadS3(video);
+    //     const result = await UploadS3(video);
 
-        const newMovie = new Movie({
-            title,
-            bio,
-            genre,
-            video: result.Location,
-        });
+    //     const newMovie = new Movie({
+    //         title,
+    //         bio,
+    //         genre,
+    //         video: result.Location,
+    //     });
 
-        const movie = await newMovie.save();
+    //     const movie = await newMovie.save();
 
-        res.status(200).json(movie);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+    //     res.status(200).json(movie);
+    // } catch (error) {
+    //     res.status(500).json({ error: error.message });
+    // }
 }
 
 
@@ -132,6 +138,72 @@ const getSingleFile = (req, res) => {
 }
 
 
+const UploadArrayOfMovies = async (req, res) => {
+
+    try {
+
+        const { title, genre, description } = req.body;
+
+        const files = req.files;
+
+        const uploadIds = [];
+
+        for (let i = 0; i < files.length; i++) {
+            const { id } = files[i];
+            uploadIds.push(id);
+        }
+
+        const newSeries = new Series({
+            title,
+            genre,
+            description,
+            movieId: uploadIds,
+        });
+
+        const series = await newSeries.save();
+
+        res.status(200).json({ series });
+
+    } catch (error) {
+
+        res.status(500).json({ error: error.message });
+
+    }
+
+}
+
+
+const getSingleSeries = (req, res) => {
+
+    const { id } = req.params;
+
+    gfsSeries.files.findOne({ _id: mongoose.Types.ObjectId(id) }, (err, file) => {
+        // Check if file
+        if (!file || file.length === 0) {
+            return res.status(404).json({ err });
+        }
+        const readStream = gfsSeriesBucket.openDownloadStream(file._id);
+        readStream.pipe(res);
+    });
+
+}
+
+
+const getAllSeries = async (req, res) => {
+
+    try {
+        
+        const allSeries = await Series.find();
+        res.status(200).json({ allSeries });
+
+    } catch (error) {
+        
+        res.status(500).json({ error: error.message });
+
+    }
+};
+
+
 module.exports = {
     SignUp,
     LoginIn,
@@ -139,4 +211,7 @@ module.exports = {
     TestUploadGridFS,
     getAllFiles,
     getSingleFile,
+    UploadArrayOfMovies,
+    getSingleSeries,
+    getAllSeries
 }
