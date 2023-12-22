@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const movieRoutes = require("../controller/movie");
+const { movieUpload } = require("../controller/movieController");
+
+//image storaeg pre process
+
 const multer = require("multer");
 
 const Storage = multer.diskStorage({
@@ -16,6 +19,8 @@ const upload = multer({
   storage: Storage,
 });
 
-router.post("/movieUpload", upload.single("file"), movieRoutes);
+// routes for movies
+
+router.post("/movie", upload.single("file"), movieUpload);
 
 module.exports = router;
