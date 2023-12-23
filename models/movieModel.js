@@ -12,7 +12,8 @@ const movie_schema = new mongoose.Schema({
     trim: true,
   },
   image: {
-    type: String,
+    data: Buffer,
+    contentType: String,
   },
   year: {
     type: Number,

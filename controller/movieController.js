@@ -1,4 +1,3 @@
-// const Movie = require("../models/Movie");
 const Movie = require("../models/movieModel");
 
 const movieUpload = async (req, res) => {
@@ -7,7 +6,10 @@ const movieUpload = async (req, res) => {
   const details = new Movie({
     name,
     description,
-    image: file.filename,
+    image: {
+      data: file.filename,
+      contentType: "image/png",
+    },
     year,
     genre,
     trailer_url,
@@ -17,8 +19,19 @@ const movieUpload = async (req, res) => {
   res.send(details);
 };
 
-const getmovie = async (req, res) => {
-  res.send("get request");
+const getAllMovies = async (req, res) => {
+  const movies = await Movie.find();
+  res.send({ movies });
 };
 
-module.exports = { movieUpload, getmovie };
+const getMovieById = async (req, res) => {
+  const id = req.params.id;
+  const movie = await Movie.findById(id);
+  res.send(movie);
+};
+
+const getHomePageData = async (req, res) => {
+  const movies = await Movie.find({}, { _id: 1, name: 1, image: 1 });
+  res.send({ movies });
+};
+module.exports = { movieUpload, getAllMovies, getMovieById, getHomePageData };
