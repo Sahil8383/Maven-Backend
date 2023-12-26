@@ -34,4 +34,17 @@ const getHomePageData = async (req, res) => {
   const movies = await Movie.find({}, { _id: 1, name: 1, image: 1 });
   res.send({ movies });
 };
-module.exports = { movieUpload, getAllMovies, getMovieById, getHomePageData };
+
+const deleteMovie = async (req, res) => {
+  const id = req.params.id;
+  const movie = await Movie.findByIdAndDelete(id);
+  res.send(movie);
+};
+
+module.exports = {
+  movieUpload,
+  getAllMovies,
+  getMovieById,
+  getHomePageData,
+  deleteMovie,
+};
