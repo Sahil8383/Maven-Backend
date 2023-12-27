@@ -11,9 +11,13 @@ const movie_schema = new mongoose.Schema({
     required: [true, "must provide description"],
     trim: true,
   },
+  // image: {
+  //   data: Buffer,
+  //   contentType: String,
+  // },
   image: {
-    data: Buffer,
-    contentType: String,
+    type: String,
+    required: true,
   },
   year: {
     type: Number,
@@ -32,8 +36,7 @@ const movie_schema = new mongoose.Schema({
   },
   main_url: {
     type: String,
-    required: [true, "must provide main_url"],
-    trim: true,
+    required: true,
   },
 });
 
