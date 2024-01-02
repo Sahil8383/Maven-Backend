@@ -127,12 +127,48 @@ const getSingleFile = (req, res) => {
     const { id } = req.params;
 
     gfs.files.findOne({ _id: mongoose.Types.ObjectId(id) }, (err, file) => {
-        // Check if file
         if (!file || file.length === 0) {
             return res.status(404).json({ err });
         }
-        const readStream = gridfsbucket.openDownloadStream(file._id);
-        readStream.pipe(res);
+
+        const videoSize = file.length;
+
+        const range = req.headers.range;
+        console.log(videoSize);
+        const start = 0;
+        const end = videoSize%10000;
+        const contentLength = end - start + 1;
+
+        const headers = {
+            'Content-Range': `bytes ${start}-${end}/${videoSize}`,
+            'Accept-Ranges': 'bytes',
+            'Content-Length': contentLength,
+            'Content-Type': 'video/mp4',
+        };
+
+        res.writeHead(206, headers);
+
+        const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+            bucketName: 'test-movies',
+        });
+
+        const downloadStream = bucket.openDownloadStream(mongoose.Types.ObjectId(id), {
+            start,
+            end,
+        });
+
+        downloadStream.on('data', (chunk) => {
+            res.write(chunk);
+        });
+
+        downloadStream.on('end', () => {
+            res.end();
+        });
+
+        downloadStream.on('error', (error) => {
+            console.error(error);
+            res.sendStatus(500);
+        });
     });
 
 }
@@ -192,12 +228,12 @@ const getSingleSeries = (req, res) => {
 const getAllSeries = async (req, res) => {
 
     try {
-        
+
         const allSeries = await Series.find();
         res.status(200).json({ allSeries });
 
     } catch (error) {
-        
+
         res.status(500).json({ error: error.message });
 
     }

@@ -3,7 +3,6 @@ const app = express();
 const port = process.env.PORT || 4000;
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const connectDB = require('./DB.js');
 const dotenv = require('dotenv');
 const router = require('./router/route');
