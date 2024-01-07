@@ -9,59 +9,16 @@ const {
   deleteMovie,
 } = require("../controller/movieController");
 
-//image storage pre process
+//multer pre process
 
 const multer = require("multer");
-const path = require("path");
 app.use(express.static("public"));
 
-// const Storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, path.join(__dirname, "../uploads/image"));
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, file.originalname);
-//   },
-// });
+// multer storage
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    if (
-      file.mimetype === "image/jpeg" ||
-      file.mimetype === "image/png" ||
-      file.mimetype === "image/jpg"
-    ) {
-      cb(null, path.join(__dirname, "../uploads/image"));
-    } else if (file.mimetype === "video/mp4" || file.mimetype === "video/mkv") {
-      cb(null, path.join(__dirname, "../uploads/video"));
-    } else {
-      cb(new Error("Invalid file type"));
-    }
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
+const storage = multer.memoryStorage();
 
-const fileFilter = (req, file, cb) => {
-  if (
-    (file.fieldname === "thumbnail" &&
-      (file.mimetype === "image/jpeg" ||
-        file.mimetype === "image/png" ||
-        file.mimetype === "image/jpg")) ||
-    (file.fieldname === "movie" &&
-      (file.mimetype === "video/mp4" || file.mimetype === "video/mkv"))
-  ) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
-
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-}).fields([
+const upload = multer({ storage: storage }).fields([
   { name: "thumbnail", maxCount: 1 },
   { name: "movie", maxCount: 1 },
 ]);

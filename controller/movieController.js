@@ -1,14 +1,15 @@
 const Movie = require("../models/movieModel");
-const { UploadS3 } = require("../aws/S3");
+const { s3Uploadv3 } = require("../aws/UploadS3");
 
 const movieUpload = async (req, res) => {
-  const thumbnailFile = req.files["thumbnail"]
-    ? req.files["thumbnail"][0]
-    : null;
-  const movieFile = req.files["movie"] ? req.files["movie"][0] : null;
   const { name, description, year, genre, trailer_url } = req.body;
-  const thumbnailUrl = await UploadS3(thumbnailFile);
-  const movieUrl = await UploadS3(movieFile);
+  files = req.files;
+  const thumbnailFile = files.thumbnail[0];
+  const movieFile = files.movie[0];
+  const thumbnailUrl = await s3Uploadv3(thumbnailFile);
+  const movieUrl = await s3Uploadv3(movieFile);
+  console.log("urlt", thumbnailUrl);
+  console.log("urlm", movieUrl);
   const details = new Movie({
     name,
     description,
@@ -16,11 +17,11 @@ const movieUpload = async (req, res) => {
     //   data: file.filename,
     //   contentType: "image/png",
     // },
-    image: thumbnailUrl.Location,
+    image: thumbnailUrl.Key,
     year,
     genre,
     trailer_url,
-    main_url: movieUrl.Location,
+    main_url: movieUrl.Key,
   });
   await details.save();
   res.send(details);
