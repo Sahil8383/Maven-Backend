@@ -13,10 +13,6 @@ const movieUpload = async (req, res) => {
   const details = new Movie({
     name,
     description,
-    // image: {
-    //   data: file.filename,
-    //   contentType: "image/png",
-    // },
     image: thumbnailUrl.Key,
     year,
     genre,
