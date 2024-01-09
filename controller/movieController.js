@@ -8,16 +8,15 @@ const movieUpload = async (req, res) => {
   const movieFile = files.movie[0];
   const thumbnailUrl = await s3Uploadv3(thumbnailFile);
   const movieUrl = await s3Uploadv3(movieFile);
-  console.log("urlt", thumbnailUrl);
-  console.log("urlm", movieUrl);
+  const cdn = process.env.AWS_CDN_URL;
   const details = new Movie({
     name,
     description,
-    image: thumbnailUrl.Key,
+    image: `${cdn}${thumbnailUrl.Key}`,
     year,
     genre,
     trailer_url,
-    main_url: movieUrl.Key,
+    main_url: `${cdn}${movieUrl.Key}`,
   });
   await details.save();
   res.send(details);
@@ -30,7 +29,12 @@ const getAllMovies = async (req, res) => {
 
 const getMovieById = async (req, res) => {
   const id = req.params.id;
-  const movie = await Movie.findById(id);
+  const movie = await Movie.findById(id, { main_url: 0 });
+  res.send(movie);
+};
+const getMovieUrlById = async (req, res) => {
+  const id = req.params.id;
+  const movie = await Movie.findById(id, { main_url: 1 });
   res.send(movie);
 };
 
@@ -51,4 +55,7 @@ module.exports = {
   getMovieById,
   getHomePageData,
   deleteMovie,
+  getMovieUrlById,
 };
+
+// add one more image for the poster

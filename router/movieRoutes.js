@@ -7,6 +7,7 @@ const {
   getMovieById,
   getHomePageData,
   deleteMovie,
+  getMovieUrlById,
 } = require("../controller/movieController");
 
 //multer pre process
@@ -28,6 +29,7 @@ const upload = multer({ storage: storage }).fields([
 router.route("/movie/upload").post(upload, movieUpload); //upload image and data
 router.route("/movie/test").get(getAllMovies); //get all movies, wont use in frontend
 router.route("/movie/:id").get(getMovieById).delete(deleteMovie); //get movie by id or delete
+router.route("/movie/url/:id").get(getMovieUrlById); //get movie url by id
 router.route("/movie").get(getHomePageData); //get movie id and name for home page
 
 module.exports = router;
