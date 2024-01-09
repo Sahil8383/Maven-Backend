@@ -6,7 +6,8 @@ const mongoose = require("mongoose");
 const connectDB = require("./db/connection.js");
 const dotenv = require("dotenv");
 // const router = require("./router/route");
-const router = require("./router/movieRoutes");
+// const router = require("./router/movieRoutes");
+const router = require("./router/series.router");
 
 dotenv.config();
 app.use(cors());
