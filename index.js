@@ -2,19 +2,20 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
 const connectDB = require("./db/connection.js");
 const dotenv = require("dotenv");
-// const router = require("./router/route");
-// const router = require("./router/movieRoutes");
-const router = require("./router/series.router");
+const Authrouter = require("./router/route");
+const MoviesRouter = require("./router/movieRoutes");
+const Seriesrouter = require("./router/series.router");
 
 dotenv.config();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 
-app.use("/api", router);
+app.use("/auth", Authrouter);
+app.use("/movies", MoviesRouter);
+app.use("/series", Seriesrouter);
 
 const start = async () => {
   const port = process.env.PORT || 4000;

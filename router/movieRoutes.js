@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const router = express.Router();
+const MoviesRouter = express.Router();
 const {
   movieUpload,
   getAllMovies,
@@ -26,10 +26,10 @@ const upload = multer({ storage: storage }).fields([
 
 // routes for movies
 
-router.route("/movie/upload").post(upload, movieUpload); //upload image and data
-router.route("/movie/test").get(getAllMovies); //get all movies, wont use in frontend
-router.route("/movie/:id").get(getMovieById).delete(deleteMovie); //get movie by id or delete
-router.route("/movie/url/:id").get(getMovieUrlById); //get movie url by id
-router.route("/movie").get(getHomePageData); //get movie id and name for home page
+MoviesRouter.route("/upload").post(upload, movieUpload); //upload image and data
+MoviesRouter.route("/test").get(getAllMovies); //get all movies, wont use in frontend
+MoviesRouter.route("/:id").get(getMovieById).delete(deleteMovie); //get movie by id or delete
+MoviesRouter.route("/url/:id").get(getMovieUrlById); //get movie url by id
+MoviesRouter.route("/").get(getHomePageData); //get movie id and name for home page
 
-module.exports = router;
+module.exports = MoviesRouter;

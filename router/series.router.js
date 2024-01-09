@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const router = express.Router();
+const SeriesRouter = express.Router();
 const {
     createSeries,
 } = require("../controller/Series.controller");
@@ -18,6 +18,6 @@ const upload = multer({ storage: storage }).fields([
   { name: "files", maxCount: 5 },
 ]);
 
-router.route("/series/upload").post(upload,createSeries); //upload image and data
+SeriesRouter.route("/upload").post(upload,createSeries); //upload image and data
 
-module.exports = router;
+module.exports = SeriesRouter;

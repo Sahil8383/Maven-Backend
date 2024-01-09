@@ -9,7 +9,7 @@ const createSeries = async (req, res) => {
         const url = await s3Uploadv3(files[i]);
         const episode = ({
             title: files[i].originalname,
-            videoLink: `${url.Key}`
+            videoLink: `${process.env.AWS_CDN_URL}${url.Key}`
         })
         seasonsEp.push(episode);
     }
