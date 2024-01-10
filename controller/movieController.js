@@ -1,7 +1,5 @@
 const Movie = require("../models/movieModel");
-const User = require("../models/User");
-const jwt = require("jsonwebtoken");
-const bycrypt = require("bcrypt");
+const Subscribed = require("../models/Subscribed");
 const { s3Uploadv3 } = require("../aws/UploadS3");
 
 const movieUpload = async (req, res) => {
@@ -34,32 +32,46 @@ const movieUpload = async (req, res) => {
   res.send(files);
 };
 
+const getHomePageData = async (req, res) => {
+  const role = req.role;
+  if(role == 'user'){
+    const movie  =  await Movie.find({},{ _id: 1, name: 1, vimage: 1 });
+    return res.send({movie});
+  }
+  const movies = await Movie.find({}, { _id: 1, name: 1, vimage: 1 });
+  const subMovie = await Subscribed.find({}, { _id: 1, name: 1, thumbnail: 1 });
+  res.send({ movies, subMovie });
+};
+
+
 const getAllMovies = async (req, res) => {
   
   const role = req.role;
   if(role == 'user'){
-    const movie = await Movie.find({});
-    return res.send(movie);
+    const movie  =  await Movie.find({});
+    return res.send({movie});
   }
-  const user = await User.findById(id);
+
   const movies = await Movie.find();
-  res.send({ movies });
+  const subMovie = await Subscribed.find();
+  res.send({ movies, subMovie });
 };
+
+
+
 
 const getMovieById = async (req, res) => {
   const id = req.params.id;
   const movie = await Movie.findById(id, { main_url: 0, vimage: 0 });
   res.send(movie);
 };
+
+
+
 const getMovieUrlById = async (req, res) => {
   const id = req.params.id;
   const movie = await Movie.findById(id, { main_url: 1 });
   res.send(movie);
-};
-
-const getHomePageData = async (req, res) => {
-  const movies = await Movie.find({}, { _id: 1, name: 1, vimage: 1 });
-  res.send({ movies });
 };
 
 const deleteMovie = async (req, res) => {
