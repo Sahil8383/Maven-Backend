@@ -2,11 +2,12 @@ const express = require("express");
 const app = express();
 const SeriesRouter = express.Router();
 const {
-    createSeries,
+    createSeries, addSeries, getAllSeries,
 } = require("../controller/Series.controller");
 //multer pre process
 
 const multer = require("multer");
+const { AuthMiddleware } = require("../controller");
 app.use(express.static("public"));
 
 // multer storage
@@ -18,6 +19,8 @@ const upload = multer({ storage: storage }).fields([
   { name: "files", maxCount: 5 },
 ]);
 
-SeriesRouter.route("/upload").post(upload,createSeries); //upload image and data
+SeriesRouter.route("/upload").post(AuthMiddleware,upload,createSeries);
+SeriesRouter.route("/:id").patch(AuthMiddleware,upload, addSeries); 
+SeriesRouter.route("/").get(AuthMiddleware,getAllSeries);
 
 module.exports = SeriesRouter;

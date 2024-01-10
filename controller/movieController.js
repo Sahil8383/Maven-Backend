@@ -1,7 +1,16 @@
 const Movie = require("../models/movieModel");
+const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+const bycrypt = require("bcrypt");
 const { s3Uploadv3 } = require("../aws/UploadS3");
 
 const movieUpload = async (req, res) => {
+
+  const role = req.role;
+  if(role !== 'admin'){
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+  
   const { name, description, year, genre, trailer_url } = req.body;
   files = req.files;
   const thumbnailFile = files.thumbnail[0];
@@ -23,6 +32,13 @@ const movieUpload = async (req, res) => {
 };
 
 const getAllMovies = async (req, res) => {
+  
+  const role = req.role;
+  if(role == 'user'){
+    const movie = await Movie.find({});
+    return res.send(movie);
+  }
+  const user = await User.findById(id);
   const movies = await Movie.find();
   res.send({ movies });
 };
