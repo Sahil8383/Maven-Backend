@@ -11,7 +11,11 @@ const movie_schema = new mongoose.Schema({
     // required: [true, "must provide description"],
     trim: true,
   },
-  image: {
+  vimage: {
+    type: String,
+    required: true,
+  },
+  himage: {
     type: String,
     required: true,
   },
