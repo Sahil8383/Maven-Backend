@@ -13,22 +13,25 @@ const movieUpload = async (req, res) => {
   
   const { name, description, year, genre, trailer_url } = req.body;
   files = req.files;
-  const thumbnailFile = files.thumbnail[0];
+  const Vimage = files.V_image[0];
+  const Himage = files.H_image[0];
   const movieFile = files.movie[0];
-  const thumbnailUrl = await s3Uploadv3(thumbnailFile);
+  const VimageUrl = await s3Uploadv3(Vimage);
+  const HimageUrl = await s3Uploadv3(Himage);
   const movieUrl = await s3Uploadv3(movieFile);
   const cdn = process.env.AWS_CDN_URL;
   const details = new Movie({
     name,
     description,
-    image: `${cdn}${thumbnailUrl.Key}`,
+    vimage: `${cdn}${VimageUrl.Key}`,
+    himage: `${cdn}${HimageUrl.Key}`,
     year,
     genre,
     trailer_url,
     main_url: `${cdn}${movieUrl.Key}`,
   });
   await details.save();
-  res.send(details);
+  res.send(files);
 };
 
 const getAllMovies = async (req, res) => {
@@ -45,7 +48,7 @@ const getAllMovies = async (req, res) => {
 
 const getMovieById = async (req, res) => {
   const id = req.params.id;
-  const movie = await Movie.findById(id, { main_url: 0 });
+  const movie = await Movie.findById(id, { main_url: 0, vimage: 0 });
   res.send(movie);
 };
 const getMovieUrlById = async (req, res) => {
@@ -55,7 +58,7 @@ const getMovieUrlById = async (req, res) => {
 };
 
 const getHomePageData = async (req, res) => {
-  const movies = await Movie.find({}, { _id: 1, name: 1, image: 1 });
+  const movies = await Movie.find({}, { _id: 1, name: 1, vimage: 1 });
   res.send({ movies });
 };
 
@@ -73,5 +76,3 @@ module.exports = {
   deleteMovie,
   getMovieUrlById,
 };
-
-// add one more image for the poster
