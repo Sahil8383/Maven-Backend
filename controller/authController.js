@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("../models/authModel");
 const jwt = require("jsonwebtoken");
 const bycrypt = require("bcrypt");
 const dotenv = require("dotenv");
@@ -43,7 +43,7 @@ const SignUp = async (req, res) => {
   }
 };
 
-const LoginIn = async (req, res) => {
+const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -60,9 +60,8 @@ const LoginIn = async (req, res) => {
     }
 
     const token = jwt.sign({ id: user._id }, process.env.ACCESS_KEY);
-    delete user.password;
-    // res.setHeader("authorization", token);
-    res.send(200).json({ token });
+
+    res.send({ token }).status(200);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -70,6 +69,6 @@ const LoginIn = async (req, res) => {
 
 module.exports = {
   SignUp,
-  LoginIn,
+  Login,
   AuthMiddleware,
 };

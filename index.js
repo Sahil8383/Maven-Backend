@@ -4,10 +4,10 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const connectDB = require("./db/connection.js");
 const dotenv = require("dotenv");
-const Authrouter = require("./router/route");
-const MoviesRouter = require("./router/movieRoutes");
-const Seriesrouter = require("./router/series.router");
-const SubRouter = require("./router/SubRoute");
+const Authrouter = require("./router/authRouter");
+const MoviesRouter = require("./router/movieRouter");
+const Seriesrouter = require("./router/seriesRouter");
+const SubRouter = require("./router/SubRouter");
 
 dotenv.config();
 app.use(cors());
