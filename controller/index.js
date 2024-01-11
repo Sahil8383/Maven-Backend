@@ -64,8 +64,7 @@ const LoginIn = async (req, res) => {
         const token = jwt.sign({ id: user._id }, process.env.ACCESS_KEY);
         delete user.password;
         res.setHeader('authorization', token);
-        res.setHeader('userid', user._id);
-        res.status(200).json({ token, user, userId: user._id });
+        res.status(200).json({ token});
 
     } catch (error) {
 
