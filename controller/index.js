@@ -64,8 +64,7 @@ const LoginIn = async (req, res) => {
         const token = jwt.sign({ id: user._id }, process.env.ACCESS_KEY);
         delete user.password;
         res.setHeader('authorization', token);
-        res.status(200).json({ token});
-
+        res.send({ token }).status(200);
     } catch (error) {
 
         res.status(500).json({ error: error.message });
