@@ -19,6 +19,10 @@ app.use("/movies", MoviesRouter);
 app.use("/series", Seriesrouter);
 app.use("/sub", SubRouter);
 
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
 const start = async () => {
   const port = process.env.PORT || 4000;
   await connectDB();
