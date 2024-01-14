@@ -11,19 +11,29 @@ AWS.config.update({
   region: process.env.AWS_REGION,
 });
 
-exports.s3Uploadv4 = async (files) => {
+exports.s3v3 = async (files) => {
   const s3client = new S3Client();
 
-  const params = files.map((file) => {
-    return {
+  const uploadPromises = files.map(async (file) => {
+    const params = {
       Bucket: process.env.AWS_BUCKET_NAME,
       Key: `uploads/${file.originalname}`,
       Body: file.buffer,
       ContentType: file.mimetype,
     };
+
+    try {
+      const response = await s3client.send(new PutObjectCommand(params));
+      return {
+        key: params.Key, // Include the object key in the response
+        ETag: response.ETag,
+        ServerSideEncryption: response.ServerSideEncryption,
+      };
+    } catch (error) {
+      console.error("Error uploading object:", error);
+      throw error;
+    }
   });
 
-  return await Promise.all(
-    params.map((param) => s3client.send(new PutObjectCommand(param)))
-  );
+  return Promise.all(uploadPromises);
 };
