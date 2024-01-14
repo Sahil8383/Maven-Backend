@@ -21,8 +21,8 @@ const upload = multer({ storage: storage }).fields([
   { name: "files", maxCount: 5 },
 ]);
 
-SeriesRouter.route("/upload").post(AuthMiddleware, upload, createSeries);
-SeriesRouter.route("/:id").patch(AuthMiddleware, upload, addSeries);
-SeriesRouter.route("/").get(AuthMiddleware, getAllSeries);
+SeriesRouter.route("/upload").post(upload, createSeries);
+SeriesRouter.route("/:id").patch(upload, addSeries);
+SeriesRouter.route("/").get(getAllSeries);
 
 module.exports = SeriesRouter;

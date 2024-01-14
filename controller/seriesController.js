@@ -1,18 +1,20 @@
 const Series = require("../models/SeriesModel");
-const { s3Uploadv3 } = require("../aws/UploadS3");
+const { s3Uploadv2 } = require("../aws/SeriesUpload");
 
 const createSeries = async (req, res) => {
   const files = req.files.files;
+  const result = await s3Uploadv2(files);
+
   const seasonsEp = [];
 
   for (let i = 0; i < files.length; i++) {
-    const url = await s3Uploadv3(files[i]);
     const episode = {
       title: files[i].originalname,
-      videoLink: `${process.env.AWS_CDN_URL}${url.Key}`,
+      videoLink: `${process.env.AWS_CDN_URL}${result[i].Key}`,
     };
     seasonsEp.push(episode);
   }
+  console.log(seasonsEp);
 
   const series = new Series({
     title: req.body.title,
@@ -40,14 +42,14 @@ const addSeries = async (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
   const files = req.files.files;
+  const result = await s3Uploadv2(files);
 
   const series = await Series.findById(id);
   const seasonsEp = [];
   for (let i = 0; i < files.length; i++) {
-    const url = await s3Uploadv3(files[i]);
     const episode = {
       title: files[i].originalname,
-      videoLink: `${process.env.AWS_CDN_URL}${url.Key}`,
+      videoLink: `${process.env.AWS_CDN_URL}${result[i].Key}`,
     };
     seasonsEp.push(episode);
   }
