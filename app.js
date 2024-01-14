@@ -4,10 +4,10 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const connectDB = require("./db/connection.js");
 const dotenv = require("dotenv");
-const Authrouter = require("./router/authRouter");
-const MoviesRouter = require("./router/movieRouter");
-const Seriesrouter = require("./router/seriesRouter");
-const SubRouter = require("./router/SubRouter");
+const Authrouter = require("./router/authRouter.js");
+const MoviesRouter = require("./router/movieRouter.js");
+const Seriesrouter = require("./router/seriesRouter.js");
+const SubRouter = require("./router/SubRouter.js");
 
 dotenv.config();
 app.use(cors());
@@ -18,6 +18,10 @@ app.use("/auth", Authrouter);
 app.use("/movies", MoviesRouter);
 app.use("/series", Seriesrouter);
 app.use("/sub", SubRouter);
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
 
 const start = async () => {
   const port = process.env.PORT || 4000;
