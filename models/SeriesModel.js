@@ -1,23 +1,25 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const seasonSchema = new mongoose.Schema({
   title: {
     type: String,
   },
-  episodes: [{
-    title: {
-      type: String,
-      required: true
+  episodes: [
+    {
+      title: {
+        type: String,
+        required: true,
+      },
+      main_url: {
+        type: String,
+        required: true,
+      },
     },
-    videoLink: {
-      type: String,
-      required: true
-    }
-  }]
+  ],
 });
 
 const seriesSchema = new mongoose.Schema({
-  title: {
+  name: {
     type: String,
   },
   genre: {
@@ -26,9 +28,21 @@ const seriesSchema = new mongoose.Schema({
   description: {
     type: String,
   },
-  seasons: [seasonSchema]
+  vimage: {
+    type: String,
+    required: true,
+  },
+  himage: {
+    type: String,
+    required: true,
+  },
+  trailer_url: {
+    type: String,
+    trim: true,
+  },
+  seasons: [seasonSchema],
 });
 
-const Series = mongoose.model('Series', seriesSchema);
+const Series = mongoose.model("Series", seriesSchema);
 
 module.exports = Series;

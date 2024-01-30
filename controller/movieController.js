@@ -1,4 +1,5 @@
 const Movie = require("../models/movieModel");
+const Series = require("../models/SeriesModel");
 const Subscribed = require("../models/subModel");
 const { s3Uploadv3 } = require("../aws/UploadS3");
 
@@ -35,11 +36,14 @@ const getHomePageData = async (req, res) => {
   const role = req.role;
   if (role == "user") {
     const movie = await Movie.find({}, { _id: 1, name: 1, vimage: 1 });
-    return res.send({ movie });
+    const series = await Series.find({}, { _id: 1, name: 1, vimage: 1 });
+    return res.send({ movie, series });
   }
   const movie = await Movie.find({}, { _id: 1, name: 1, vimage: 1 });
   const subMovie = await Subscribed.find({}, { _id: 1, name: 1, vimage: 1 });
-  res.send({ movie, subMovie });
+  const series = await Series.find({}, { _id: 1, name: 1, vimage: 1 });
+
+  res.send({ movie, subMovie, series });
 };
 
 const getAllMovies = async (req, res) => {
@@ -56,10 +60,15 @@ const getAllMovies = async (req, res) => {
 const getMediaById = async (req, res) => {
   const id = req.params.id;
   const movie = await Movie.findById(id, { main_url: 0, vimage: 0 });
-  const Sub = await Subscribed.findById(id, { main_url: 0, vimage: 0 });
+  const series = await Series.findById(id, { main_url: 0, vimage: 0 });
+  const Sub = await Subscribed.findById(id, { vimage: 0 });
   if (movie) {
     return res.send({ media: movie });
   }
+  if (series) {
+    return res.send({ media: series });
+  }
+
   res.send({ media: Sub });
 };
 
@@ -67,9 +76,14 @@ const getMediaUrlById = async (req, res) => {
   const id = req.params.id;
   const movie = await Movie.findById(id, { main_url: 1 });
   const sub = await Subscribed.findById(id, { main_url: 1 });
+  // const series = await Series.findById(id, { main_url: 1 });
   if (movie) {
     return res.send({ media: movie });
   }
+  // if (series) {
+  //   return res.send({ media: series });
+  // }
+
   res.send({ media: sub });
 };
 

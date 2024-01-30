@@ -17,7 +17,8 @@ app.use(express.static("public"));
 const storage = multer.memoryStorage();
 
 const upload = multer({ storage: storage }).fields([
-  { name: "thumbnail", maxCount: 1 },
+  { name: "V_image", maxCount: 1 },
+  { name: "H_image", maxCount: 1 },
   { name: "files", maxCount: 5 },
 ]);
 
