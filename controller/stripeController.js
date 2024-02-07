@@ -19,7 +19,7 @@ exports.createCheckoutSession = async (req, res) => {
         ],
         mode: "payment",
         success_url: "http://localhost:3000/",
-        cancel_url: "http://localhost:3000/cancel",
+        cancel_url: "http://localhost:3000/primium",
     });
 
     res.json({ id: session.id });
