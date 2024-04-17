@@ -7,4 +7,6 @@ const { SignUp, Login } = require("../controller/authController");
 Authrouter.post("/signup", SignUp);
 Authrouter.post("/login", Login);
 
+console.log("Github congif test");
+
 module.exports = Authrouter;

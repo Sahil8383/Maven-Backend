@@ -8,6 +8,7 @@ const Authrouter = require("./router/authRouter.js");
 const MoviesRouter = require("./router/movieRouter.js");
 const Seriesrouter = require("./router/seriesRouter.js");
 const SubRouter = require("./router/SubRouter.js");
+const stripeRouter = require("./router/stripeRouter.js");
 
 dotenv.config();
 app.use(cors());
@@ -18,6 +19,7 @@ app.use("/auth", Authrouter);
 app.use("/movies", MoviesRouter);
 app.use("/series", Seriesrouter);
 app.use("/sub", SubRouter);
+app.use("/stripe", stripeRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
