@@ -7,7 +7,7 @@ const dotenv = require("dotenv");
 const Authrouter = require("./router/authRouter.js");
 const MoviesRouter = require("./router/movieRouter.js");
 const Seriesrouter = require("./router/seriesRouter.js");
-const SubRouter = require("./router/SubRouter.js");
+const SubRouter = require("./router/subRouter.js");
 const stripeRouter = require("./router/stripeRouter.js");
 
 dotenv.config();

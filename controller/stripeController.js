@@ -1,4 +1,4 @@
-const stripe = require("stripe")(process.env.STRIPE_SECRET);
+const stripe = require("stripe")("sk_test_51P7FcvClJ4SpjkvvUKTULQB5jqfUsZclZux9nvoPGzikAJNcy7qQrGUJDPOSly1yXOYA56ACGbxJFCN4QcaqHKwO00VfSfSCli");
 
 exports.createCheckoutSession = async (req, res) => {
     const { amount } = req.body;
@@ -8,17 +8,17 @@ exports.createCheckoutSession = async (req, res) => {
         line_items: [
             {
                 price_data: {
-                    currency: "inr",
+                    currency: "usd",
                     product_data: {
                         name: "Subscription Plan",
                     },
-                    unit_amount: amount*100,
+                    unit_amount: amount,
                 },
                 quantity: 1,
             },
         ],
         mode: "payment",
-        success_url: "http://localhost:3000/",
+        success_url: "http://localhost:3000/home",
         cancel_url: "http://localhost:3000/primium",
     });
 

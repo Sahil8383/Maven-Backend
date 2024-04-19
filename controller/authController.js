@@ -6,7 +6,7 @@ dotenv.config();
 
 const AuthMiddleware = async (req, res, next) => {
   const token = req.headers["authorization"];
-
+  console.log(token);
   if (!token) {
     res.status(401).send({ message: "Unauthorized" });
   }
@@ -16,7 +16,9 @@ const AuthMiddleware = async (req, res, next) => {
       return res.status(403).json({ error: "Forbidden" });
     }
 
-    const u = await User.findById(user.id);
+    const u = await User.findOne({
+      userId: user.userId
+    });
     req.role = u.role;
     next();
   });
@@ -67,8 +69,35 @@ const Login = async (req, res) => {
   }
 };
 
+
+const ClerkSignUp = async (req,res) => {
+  try {
+    const { userId } = req.body;
+
+    const token = jwt.sign({ userId: userId }, process.env.ACCESS_KEY);
+
+    const oldUser = await User.findOne({ userId: userId });
+
+    if(oldUser){
+      return res.status(200).json({token});
+    }
+
+    const newUser = new User({
+      userId: userId,
+      role: "user",
+    });
+
+    const user = await newUser.save();
+    console.log(token)
+    res.status(201).json(token);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 module.exports = {
   SignUp,
   Login,
   AuthMiddleware,
+  ClerkSignUp
 };
