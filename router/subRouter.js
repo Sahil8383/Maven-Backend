@@ -1,6 +1,6 @@
 const express = require("express");
 const multer = require("multer");
-const { createSubscribed } = require("../controller/subController");
+const { createSubscribed } = require("../controller/SubController");
 const SubRouter = express.Router();
 
 const storage = multer.memoryStorage();
