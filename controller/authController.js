@@ -6,7 +6,7 @@ dotenv.config();
 
 const AuthMiddleware = async (req, res, next) => {
   const token = req.headers["authorization"];
-  console.log(token);
+  // console.log(token);
   if (!token) {
     res.status(401).send({ message: "Unauthorized" });
   }
@@ -17,7 +17,7 @@ const AuthMiddleware = async (req, res, next) => {
     }
 
     const u = await User.findOne({
-      userId: user.userId
+      userId: user.userId,
     });
     req.role = u.role;
     next();
@@ -69,8 +69,7 @@ const Login = async (req, res) => {
   }
 };
 
-
-const ClerkSignUp = async (req,res) => {
+const ClerkSignUp = async (req, res) => {
   try {
     const { userId } = req.body;
 
@@ -78,8 +77,8 @@ const ClerkSignUp = async (req,res) => {
 
     const oldUser = await User.findOne({ userId: userId });
 
-    if(oldUser){
-      return res.status(200).json({token});
+    if (oldUser) {
+      return res.status(200).json({ token });
     }
 
     const newUser = new User({
@@ -88,16 +87,16 @@ const ClerkSignUp = async (req,res) => {
     });
 
     const user = await newUser.save();
-    console.log(token)
+    console.log(token);
     res.status(201).json(token);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-}
+};
 
 module.exports = {
   SignUp,
   Login,
   AuthMiddleware,
-  ClerkSignUp
+  ClerkSignUp,
 };
