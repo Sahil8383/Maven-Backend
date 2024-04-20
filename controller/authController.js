@@ -78,7 +78,7 @@ const ClerkSignUp = async (req, res) => {
     const oldUser = await User.findOne({ userId: userId });
 
     if (oldUser) {
-      return res.status(200).json({ token });
+      return res.status(200).json(token);
     }
 
     const newUser = new User({
