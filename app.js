@@ -8,6 +8,7 @@ const Authrouter = require("./router/authRouter.js");
 const MoviesRouter = require("./router/movieRouter.js");
 const Seriesrouter = require("./router/seriesRouter.js");
 const SubRouter = require("./router/subRouter.js");
+const RazorPayRouter = require("./router/razorpayRoute.js")
 const stripeRouter = require("./router/stripeRouter.js");
 
 dotenv.config();
@@ -20,6 +21,7 @@ app.use("/movies", MoviesRouter);
 app.use("/series", Seriesrouter);
 app.use("/sub", SubRouter);
 app.use("/stripe", stripeRouter);
+app.use("/rp",RazorPayRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
