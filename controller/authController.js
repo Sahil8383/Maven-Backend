@@ -88,7 +88,7 @@ const ClerkSignUp = async (req, res) => {
 
     const user = await newUser.save();
     console.log(token);
-    res.status(201).json(token);
+    res.status(200).json(token);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
