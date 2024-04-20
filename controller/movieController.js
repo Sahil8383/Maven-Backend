@@ -37,7 +37,7 @@ const getHomePageData = async (req, res) => {
   if (role == "user") {
     const movie = await Movie.find({}, { _id: 1, name: 1, vimage: 1 });
     const series = await Series.find({}, { _id: 1, name: 1, vimage: 1 });
-    return res.send({ movie, series });
+    return res.send({ movie, series, role });
   }
   const movie = await Movie.find({}, { _id: 1, name: 1, vimage: 1 });
   const subMovie = await Subscribed.find({}, { _id: 1, name: 1, vimage: 1 });
